@@ -1,5 +1,7 @@
-const { ActivityType } = require('discord.js');
+const { ActivityType, EmbedBuilder } = require('discord.js');
 const config = require('../config');
+const fs = require('fs');
+const path = require('path');
 
 module.exports = {
     name: 'clientReady',
@@ -41,6 +43,61 @@ module.exports = {
         });
         
         console.log('✅ Bot is ready!');
+        
+        // Send rules to channel
+        const rulesChannelId = process.env.RULES_CHANNEL_ID || '1474762147589390337';
+        const rulesChannel = client.channels.cache.get(rulesChannelId);
+        
+        if (rulesChannel) {
+            try {
+                // Read rules from file
+                const rulesPath = path.join(__dirname, '..', 'правила.txt');
+                let rulesText = '';
+                
+                if (fs.existsSync(rulesPath)) {
+                    rulesText = fs.readFileSync(rulesPath, 'utf-8');
+                } else {
+                    console.log('⚠️ Rules file not found, skipping rules posting');
+                }
+                
+                if (rulesText) {
+                    // Split rules into chunks (Discord embed limit is 4096 chars per field)
+                    const chunks = [];
+                    const lines = rulesText.split('\n');
+                    let currentChunk = '';
+                    
+                    for (const line of lines) {
+                        if ((currentChunk + line + '\n').length > 4000) {
+                            chunks.push(currentChunk);
+                            currentChunk = line + '\n';
+                        } else {
+                            currentChunk += line + '\n';
+                        }
+                    }
+                    if (currentChunk) chunks.push(currentChunk);
+                    
+                    // Send embeds
+                    for (let i = 0; i < chunks.length; i++) {
+                        const embed = new EmbedBuilder()
+                            .setColor('#FFA500') // Orange
+                            .setDescription(chunks[i]);
+                        
+                        if (i === 0) {
+                            embed.setTitle('📜 Правила сервера DeadMine');
+                        }
+                        
+                        await rulesChannel.send({ embeds: [embed] });
+                        
+                        // Small delay between messages
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                    }
+                    
+                    console.log('✅ Rules sent to channel');
+                }
+            } catch (error) {
+                console.error('❌ Error sending rules:', error);
+            }
+        }
         
         // Auto-assign role to all members
         const autoRoleId = process.env.AUTO_ROLE_ID;
