@@ -31,6 +31,18 @@ cp .env.example .env
 npm start
 ```
 
+## Деплой на Railway
+
+1. Подключите GitHub репозиторий к Railway
+2. Добавьте переменные окружения в Railway:
+   - `DISCORD_TOKEN`
+   - `GUILD_ID`
+   - `VOICE_LOG_CHANNEL`
+   - `CHAT_LOG_CHANNEL`
+   - `MODERATION_LOG_CHANNEL`
+   - `ROLE_LOG_CHANNEL`
+3. Railway автоматически задеплоит бота
+
 ## Требования
 
 - Node.js 16.9.0 или выше
@@ -41,3 +53,4 @@ npm start
 В Discord Developer Portal включите:
 - Server Members Intent
 - Message Content Intent
+- Presence Intent (опционально)
