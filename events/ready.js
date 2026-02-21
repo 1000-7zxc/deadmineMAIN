@@ -34,41 +34,29 @@ function getWeekRange() {
 
 // Send weekly report
 async function sendWeeklyReport(client) {
-    console.log('📊 sendWeeklyReport function called');
     const reportChannelId = process.env.REPORT_CHANNEL_ID || '1474896083971739874';
     const deputyRoleId = '1474448804064264489'; // Заместитель
     const curatorRoleId = '1474448804064264490'; // Куратор КП
     
-    console.log(`📊 Report channel ID: ${reportChannelId}`);
-    console.log(`📊 Guilds count: ${client.guilds.cache.size}`);
-    
     for (const [guildId, guild] of client.guilds.cache) {
         try {
-            console.log(`📊 Processing guild: ${guild.name} (${guildId})`);
             const reportChannel = guild.channels.cache.get(reportChannelId);
             
             if (!reportChannel) {
-                console.log(`❌ Report channel not found in guild ${guild.name}`);
+                console.log(`⚠️ Report channel not found in guild ${guild.name}`);
                 continue;
             }
             
-            console.log(`✅ Report channel found: ${reportChannel.name}`);
-            
             const tracking = client.inviteTracking.get(guildId) || new Map();
-            console.log(`📊 Tracking data size: ${tracking.size}`);
-            
             const members = await guild.members.fetch();
-            console.log(`📊 Total members: ${members.size}`);
             
             // Get members with target roles
             const targetMembers = members.filter(m => 
                 m.roles.cache.has(deputyRoleId) || m.roles.cache.has(curatorRoleId)
             );
             
-            console.log(`📊 Target members with roles: ${targetMembers.size}`);
-            
             if (targetMembers.size === 0) {
-                console.log('⚠️ No members with target roles found');
+                console.log(`⚠️ No members with target roles found in ${guild.name}`);
                 continue;
             }
             
@@ -84,7 +72,7 @@ async function sendWeeklyReport(client) {
                 .sort((a, b) => b.count - a.count);
             
             for (const { member, count } of sortedMembers) {
-                reportText += `👤 <@${member.id}>, Принял: **${count}** кандидатов\n`;
+                reportText += `� <@${member.id}>, Принял: **${count}** кандидатов\n`;
             }
             
             const embed = new EmbedBuilder()
@@ -173,18 +161,6 @@ module.exports = {
         
         // Schedule weekly reports
         scheduleWeeklyReport(client);
-        
-        // Send test report (remove this after testing)
-        console.log(`🔍 SEND_TEST_REPORT = ${process.env.SEND_TEST_REPORT}`);
-        if (process.env.SEND_TEST_REPORT === 'true') {
-            console.log('📊 Sending test report in 5 seconds...');
-            setTimeout(() => {
-                console.log('📊 Executing sendWeeklyReport now...');
-                sendWeeklyReport(client);
-            }, 5000);
-        } else {
-            console.log('ℹ️ Test report disabled (set SEND_TEST_REPORT=true to enable)');
-        }
         
         console.log('✅ Bot is ready!');
         
