@@ -142,7 +142,7 @@ module.exports = {
         
         client.user.setPresence({
             activities: [{ 
-                name: 'как проиходят хакинги', 
+                name: 'как происходят хакинги', 
                 type: ActivityType.Watching 
             }],
             status: 'online'
