@@ -2,7 +2,7 @@ const { ActivityType } = require('discord.js');
 const config = require('../config');
 
 module.exports = {
-    name: 'ready',
+    name: 'clientReady',
     once: true,
     execute(client) {
         console.log('═══════════════════════════════════════════════════════════════');
