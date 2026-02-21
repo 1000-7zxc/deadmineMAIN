@@ -2,6 +2,7 @@ const { ActivityType, EmbedBuilder } = require('discord.js');
 const config = require('../config');
 const fs = require('fs');
 const path = require('path');
+const { scheduleWeeklyReports } = require('../utils/weeklyReports');
 
 module.exports = {
     name: 'clientReady',
@@ -148,5 +149,9 @@ module.exports = {
             
             console.log('═══════════════════════════════════════════════════════════════');
         }
+        
+        // Schedule weekly reports
+        scheduleWeeklyReports(client);
+        console.log('✅ Weekly reports system initialized');
     }
 };

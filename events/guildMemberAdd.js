@@ -1,9 +1,13 @@
 const { EmbedBuilder } = require('discord.js');
 const config = require('../config');
+const inviteTracker = require('./inviteTracker');
 
 module.exports = {
     name: 'guildMemberAdd',
     async execute(member, client) {
+        // Track invite
+        await inviteTracker.trackInvite(member, client);
+        
         try {
             // Auto-assign role
             const autoRoleId = process.env.AUTO_ROLE_ID;
