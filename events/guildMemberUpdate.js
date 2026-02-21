@@ -34,7 +34,7 @@ module.exports = {
                     .setColor('#00ff00')
                     .setTitle('➕ Роль выдана')
                     .addFields(
-                        { name: 'Пользователь', value: `${newMember.user.tag}`, inline: true },
+                        { name: 'Пользователь', value: `<@${newMember.id}>`, inline: true },
                         { name: 'ID', value: newMember.id, inline: true },
                         { name: 'Модератор', value: executor ? `${executor.tag}` : 'Неизвестно', inline: true },
                         { name: 'Роли', value: addedRoles.map(r => `<@&${r.id}>`).join(', ') }
@@ -51,7 +51,7 @@ module.exports = {
                     .setColor('#ff0000')
                     .setTitle('➖ Роль снята')
                     .addFields(
-                        { name: 'Пользователь', value: `${newMember.user.tag}`, inline: true },
+                        { name: 'Пользователь', value: `<@${newMember.id}>`, inline: true },
                         { name: 'ID', value: newMember.id, inline: true },
                         { name: 'Модератор', value: executor ? `${executor.tag}` : 'Неизвестно', inline: true },
                         { name: 'Роли', value: removedRoles.map(r => `<@&${r.id}>`).join(', ') }
